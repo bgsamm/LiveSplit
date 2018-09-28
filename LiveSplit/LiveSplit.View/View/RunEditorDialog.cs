@@ -1269,7 +1269,8 @@ namespace LiveSplit.View
         private void btnAddComparison_Click(object sender, EventArgs e)
         {
             var name = "";
-            var result = InputBox.Show("New Comparison", "Comparison Name:", ref name);
+            int selection;
+            var result = InputBox.ShowRadio("New Comparison", "Comparison Name:", "Select comparison method:", "Segments", "Splits", ref name, out selection);
             if (result == DialogResult.OK)
             {
                 if (!Run.Comparisons.Contains(name))

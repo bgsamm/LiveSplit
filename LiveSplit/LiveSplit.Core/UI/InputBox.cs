@@ -112,5 +112,68 @@ namespace LiveSplit.UI
                 return dialogResult;
             }
         }
+
+        public static DialogResult ShowRadio(string title, string promptText, string promptText2, string radioText, string radioText2, ref string value, out int selection)
+        {
+            return ShowRadio(null, title, promptText, promptText2, radioText, radioText2, ref value, out selection);
+        }
+
+        public static DialogResult ShowRadio(IWin32Window owner, string title, string promptText, string promptText2, string radioText, string radioText2, ref string value, out int selection)
+        {
+            using (Form form = new Form())
+            {
+                Label label = new Label();
+                TextBox textBox = new TextBox();
+                RadioButton radioButton = new RadioButton();
+                RadioButton radioButton2 = new RadioButton();
+                GroupBox radioGroup = new GroupBox();
+                Button buttonOk = new Button();
+                Button buttonCancel = new Button();
+
+                form.Text = title;
+                label.Text = promptText;
+                textBox.Text = value;
+
+                radioButton.Text = radioText;
+                radioButton2.Text = radioText2;
+                radioButton.Location = new Point(50, 15);
+                radioButton2.Location = new Point(165, 15);
+                radioGroup.Controls.Add(radioButton);
+                radioGroup.Controls.Add(radioButton2);
+                radioGroup.Text = promptText2;
+                radioButton.Checked = true;
+
+                buttonOk.Text = "OK";
+                buttonCancel.Text = "Cancel";
+                buttonOk.DialogResult = DialogResult.OK;
+                buttonCancel.DialogResult = DialogResult.Cancel;
+
+                label.SetBounds(9, 20, 372, 13);
+                textBox.SetBounds(12, 36, 372, 20);
+                radioGroup.SetBounds(9, 67, 281, 43);
+                buttonOk.SetBounds(228, 122, 75, 23);
+                buttonCancel.SetBounds(309, 122, 75, 23);
+
+                label.AutoSize = true;
+                textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
+                buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+                buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+
+                form.ClientSize = new Size(396, 162);
+                form.Controls.AddRange(new Control[] { label, textBox, radioGroup, buttonOk, buttonCancel });
+                form.ClientSize = new Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
+                form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                form.StartPosition = FormStartPosition.CenterScreen;
+                form.MinimizeBox = false;
+                form.MaximizeBox = false;
+                form.AcceptButton = buttonOk;
+                form.CancelButton = buttonCancel;
+
+                DialogResult dialogResult = owner != null ? form.ShowDialog(owner) : form.ShowDialog();
+                value = textBox.Text;
+                selection = radioButton.Checked ? 1 : 2;
+                return dialogResult;
+            }
+        }
     }
 }
